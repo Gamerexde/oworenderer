@@ -1,5 +1,3 @@
-import org.gradle.plugins.javascript.envjs.http.simple.SimpleHttpFileServerFactory
-
 plugins {
     kotlin("multiplatform") version "1.4.0"
 }
@@ -13,7 +11,7 @@ group = extra["projectGroup"] as String
 version = extra["projectVersion"] as String
 
 kotlin {
-    jvm(){
+    jvm {
         tasks{
             withJava()
 
@@ -31,7 +29,6 @@ kotlin {
             }
         }
     }
-    js().browser()
 
     sourceSets{
         val commonMain by getting {
@@ -49,28 +46,10 @@ kotlin {
                 implementation(kotlin("stdlib-jdk8"))
             }
         }
-
-        val jsMain by getting{
-            dependencies{
-                implementation(kotlin("stdlib-js"))
-            }
-        }
     }
 }
 
 tasks {
-    register("startWebServer"){
-        val port = 8080
-        val path = "$rootDir/build/distributions"
-
-        doLast {
-            val server = SimpleHttpFileServerFactory().start(File(path), port)
-
-            println("Server started in directory " + server.getContentRoot())
-            println("Link: http://localhost:" + server.getPort() + "/index.html\n\n")
-        }
-    }
-
     register("runJvm", Exec::class){
         dependsOn("jvmFatJar")
 
